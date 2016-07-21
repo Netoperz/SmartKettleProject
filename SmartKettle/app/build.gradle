@@ -24,4 +24,8 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:design:24.0.0'
+    compile project(path: ':libwifihelper')
+    compile 'com.google.code.gson:gson:2.6.2'
+    compile 'org.slf4j:slf4j-android:1.7.21'
+    compile 'javax.jmdns:jmdns:3.4.1'
 }

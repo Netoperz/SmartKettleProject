@@ -3,11 +3,12 @@
 #include <Timer.h>
 
 #define HEARTBEAT_INTERVAL 5000
-#define PORT 85697
+#define PORT 9999
 
 
 
 int ledPin = 5;
+int readLDR = 0;
 WiFiServer server(PORT);
 WiFiClient client;
 String response;
@@ -28,6 +29,8 @@ void connectToWifi();
 void readLDRSensor();
 void handleResponse();
 void heartbeatGenerator();
+String packetBuilder(String);
+
 
 void update();
 
@@ -38,7 +41,7 @@ void setup() {
 
 
   connectToWifi();
-  
+
 
   server.begin();
   server.setNoDelay(true);
@@ -63,7 +66,7 @@ void setup() {
 void loop() {
 
 
-  
+
   if (client.connected()) {
     while (client.available()) {
       char c = client.read();
@@ -101,17 +104,29 @@ void loop() {
 }
 
 void readLDRSensor() {
-  Serial.println("LDR=");
+  String packet = "";
   int LDRPin = A0;
-  int readLDR = analogRead(LDRPin);
+
+  readLDR = analogRead(LDRPin);
+
+
+
+  String result = "";
   Serial.print("LDR=");
   Serial.print(readLDR);
   Serial.println();
-  if (readLDR >= 900)
-    Serial.print("Smart Kettle Boil");
-  else
-    Serial.print("Smart Kettle StandBy");
 
+  if (readLDR >= 750){
+    Serial.print("Smart Kettle Boil");
+    result = "BOILING";
+  }
+  else{
+    Serial.print("Smart Kettle StandBy");
+     result = "STANDBY";
+  }
+
+  packet = packetBuilder(result);
+  client.write((uint8_t*)&packet[0], packet.length());
 }
 
 
@@ -138,7 +153,7 @@ void connectToWifi() {
   IPAddress localIP = WiFi.localIP();
   Serial.println(localIP);
 
-  String name = "Smart Kettle " + getMacAddress();
+  String name = "esp8266" + getMacAddress();
   Serial.println(name);
   if (!MDNS.begin(&name[0], localIP, discovery_ttl)) {
     Serial.println("Error setting up MDNS responder!");
@@ -148,7 +163,7 @@ void connectToWifi() {
   }
   Serial.println("mDNS responder started");
 
-  MDNS.addService("esp8266_smart_kettle", "tcp", PORT);
+  MDNS.addService("esp8266", "tcp", PORT);
 }
 
 void handleResponse() {
@@ -181,12 +196,9 @@ void handleResponse() {
 
 void update() {
 
-   myLDRTimer.stop(myLDRTimerInt);
-
-   myLDRTimerInt = myLDRTimer.every(readingFreq,readLDRSensor);
-
   myLDRTimer.stop(myLDRTimerInt);
-  myLDRTimerInt = Serial.parseInt();
+
+  myLDRTimerInt = myLDRTimer.every(readingFreq, readLDRSensor);
 }
 
 
@@ -223,4 +235,17 @@ String getMacAddress() {
   cMac.toUpperCase();
   cMac += "~";
   return cMac;
+}
+
+String packetBuilder(String ldr)
+{ String packet = "";
+
+  packet += "#";
+  packet += "|Checksum|+";
+
+  packet += "LDR:|" + ldr + "|" "|" "|";
+
+  packet += "~";
+
+  return packet;
 }

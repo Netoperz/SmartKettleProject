@@ -12,8 +12,14 @@
     tools:context="com.ardic.android.smartkettle.ControlDashboard"
     tools:showIn="@layout/activity_control_dashboard">
 
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/state"
+        android:id="@+id/stateText"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp" />
 </RelativeLayout>
