@@ -22,15 +22,18 @@ public class PacketUtils {
             if (BuildConfig.DEBUG) {
                 Log.i(TAG, "Incoming Sensor Data Packet : " + packet);
             }
-            values = new String[3];
+            values = new String[5];
             List<String> valuesList = split(packet, "\\|");
                         Log.i(TAG, "valuesList" + valuesList);
 
-                       if (valuesList.size() == 7) {
+                       if (valuesList.size() == 9) {
 
                                  values[0] = valuesList.get(3);
                                  values[1] = valuesList.get(4);
                                  values[2] = valuesList.get(5);
+                                 values[3] = valuesList.get(6);
+                                 values[4] = valuesList.get(7);
+
                        }
                         return values;
 

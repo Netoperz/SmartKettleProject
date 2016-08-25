@@ -2,4 +2,9 @@
     <string name="app_name">SmartKettle</string>
     <string name="action_settings">Settings</string>
     <string name="state">State =</string>
+    <string name="weight">Weight =</string>
+    <string name="water">Water =</string>
+    <string name="tea">Tea =</string>
+    <string name="open">close</string>
+    <string name="kettle_state">Kettle State =</string>
 </resources>

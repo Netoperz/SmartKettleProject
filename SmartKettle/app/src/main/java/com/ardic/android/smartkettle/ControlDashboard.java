@@ -16,22 +16,30 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.ardic.android.connectivity.libwirelessconnection.WifiHelper;
 import com.ardic.android.connectivity.libwirelessconnection.listeners.SimpleWifiConnectionListener;
+import com.ardic.android.iotignite.things.Thing;
+import com.ardic.android.iotignite.things.ThingData;
+
+
+
+
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 public class ControlDashboard extends AppCompatActivity implements NsdManager.DiscoveryListener {
 
     private static final String TAG ="TestApp";
     // Ignite Variables //
     private NsdManager mNsdManager;
-    private static final String SERVICE_TYPE="_esp8266._tcp.";
+    private static final String SERVICE_TYPE="_esp8266kettleservice._tcp.";
     private static List<String> espServiceList = new ArrayList<String>();
     private static List<ESP8266NodeHandler> espInstances = new ArrayList<ESP8266NodeHandler>();
     private static final long ESP_HANDLER_PERIOD = 30000L;
@@ -41,6 +49,12 @@ public class ControlDashboard extends AppCompatActivity implements NsdManager.Di
 
     private TextView stateText;
 
+    private TextView weightText;
+
+    private TextView waterText;
+
+    private TextView teaText;
+
     private Activity mActivity;
 
 
@@ -48,13 +62,24 @@ public class ControlDashboard extends AppCompatActivity implements NsdManager.Di
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_control_dashboard);
+        setContentView(R.layout.content_control_dashboard);
+
+
+
+
+
         Log.i(TAG,"Application started...");
         mActivity = this;
+
         mNsdManager = (NsdManager) getSystemService(Context.NSD_SERVICE);
         mNsdManager.discoverServices(
                 SERVICE_TYPE, NsdManager.PROTOCOL_DNS_SD, this);
         stateText = (TextView) findViewById(R.id.stateText);
+        weightText = (TextView)  findViewById(R.id.weightText);
+        waterText = (TextView)  findViewById(R.id.waterText);
+        teaText = (TextView)  findViewById(R.id.teaText);
+
+
 
         mWifiHelper = WifiHelper.WifiHelperFactory.create(getApplicationContext(), new SimpleWifiConnectionListener() {
             @Override
@@ -220,4 +245,9 @@ public class ControlDashboard extends AppCompatActivity implements NsdManager.Di
     public void onServiceLost(NsdServiceInfo serviceInfo) {
 
     }
+
+
+
+
 }
+
